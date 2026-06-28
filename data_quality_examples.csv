@@ -1,0 +1,62 @@
+Issue,RowID,Value,ShouldBe,Context
+ZIP leading zero dropped,186,6824,06824,"Fairfield, Connecticut"
+ZIP leading zero dropped,198,7090,07090,"Westfield, New Jersey"
+ZIP leading zero dropped,268,7960,07960,"Morristown, New Jersey"
+ZIP leading zero dropped,299,7109,07109,"Belleville, New Jersey"
+ZIP leading zero dropped,300,7109,07109,"Belleville, New Jersey"
+ZIP leading zero dropped,301,7109,07109,"Belleville, New Jersey"
+ZIP leading zero dropped,302,7109,07109,"Belleville, New Jersey"
+ZIP leading zero dropped,303,7109,07109,"Belleville, New Jersey"
+ZIP leading zero dropped,307,8701,08701,"Lakewood, New Jersey"
+ZIP leading zero dropped,308,8701,08701,"Lakewood, New Jersey"
+Non-breaking space (\xa0) in product name,12,'Konftel 250 Conference\xa0phone\xa0- Charcoal black',Konftel 250 Conference phone - Charcoal black,TEC-PH-10002033
+Non-breaking space (\xa0) in product name,27,'Imation\xa08GB Mini TravelDrive USB 2.0\xa0Flash Drive',Imation 8GB Mini TravelDrive USB 2.0 Flash Drive,TEC-AC-10003027
+Non-breaking space (\xa0) in product name,48,'Imation\xa08gb Micro Traveldrive Usb 2.0\xa0Flash Drive',Imation 8gb Micro Traveldrive Usb 2.0 Flash Drive,TEC-AC-10002167
+Non-breaking space (\xa0) in product name,60,'Imation\xa08gb Micro Traveldrive Usb 2.0\xa0Flash Drive',Imation 8gb Micro Traveldrive Usb 2.0 Flash Drive,TEC-AC-10002167
+Non-breaking space (\xa0) in product name,87,'Logitech\xa0LS21 Speaker System - PC Multimedia - 2.1-CH - Wired',Logitech LS21 Speaker System - PC Multimedia - 2.1-CH - Wired,TEC-AC-10001998
+Non-breaking space (\xa0) in product name,110,'Logitech\xa0Gaming G510s - Keyboard',Logitech Gaming G510s - Keyboard,TEC-AC-10000844
+Non-breaking space (\xa0) in product name,148,'Plantronics Cordless\xa0Phone Headset\xa0with In-line Volume - M214C',Plantronics Cordless Phone Headset with In-line Volume - M214C,TEC-PH-10000215
+Non-breaking space (\xa0) in product name,153,'Jabra BIZ 2300 Duo QD Duo Corded\xa0Headset',Jabra BIZ 2300 Duo QD Duo Corded Headset,TEC-PH-10001254
+Non-breaking space (\xa0) in product name,182,'Imation\xa0Secure+ Hardware Encrypted USB 2.0\xa0Flash Drive; 16GB',Imation Secure+ Hardware Encrypted USB 2.0 Flash Drive; 16GB,TEC-AC-10004659
+Non-breaking space (\xa0) in product name,236,'Logitech\xa0P710e Mobile Speakerphone',Logitech P710e Mobile Speakerphone,TEC-AC-10003832
+Product ID maps to multiple names,2116,FUR-BO-10002213,"DMI Eclipse Executive Suite Bookcases → Sauder Forest Hills Library, Woodland Oak Finish",10 rows affected
+Product ID maps to multiple names,67,FUR-CH-10001146,"Global Value Mid-Back Manager's Chair, Gray → Global Task Chair, Black",14 rows affected
+Product ID maps to multiple names,1460,FUR-FU-10001473,"DAX Wood Document Frame → Eldon Executive Woodline II Desk Accessories, Mahogany",14 rows affected
+Product ID maps to multiple names,235,FUR-FU-10004017,"Tenex Contemporary Contur Chairmats for Low and Medium Pile Carpet, Computer, 39"" x 49"" → Executive Impressions 13"" Chairman Wall Clock",7 rows affected
+Product ID maps to multiple names,294,FUR-FU-10004091,"Howard Miller 13"" Diameter Goldtone Round Wall Clock → Eldon 200 Class Desk Accessories, Black",8 rows affected
+Product ID maps to multiple names,1474,FUR-FU-10004270,"Eldon Image Series Desk Accessories, Burgundy → Executive Impressions 13"" Clairmont Wall Clock",16 rows affected
+Product ID maps to multiple names,30,FUR-FU-10004848,"Howard Miller 13-3/4"" Diameter Brushed Chrome Round Wall Clock → DAX Solid Wood Frames",12 rows affected
+Product ID maps to multiple names,498,FUR-FU-10004864,"Howard Miller 14-1/2"" Diameter Chrome Round Wall Clock → Eldon 500 Class Desk Accessories",12 rows affected
+Product ID maps to multiple names,803,OFF-AP-10000576,"Belkin 7 Outlet SurgeMaster II → Belkin 325VA UPS Surge Protector, 6'",7 rows affected
+Product ID maps to multiple names,136,OFF-AR-10001149,"Sanford Colorific Colored Pencils, 12/Box → Avery Hi-Liter Comfort Grip Fluorescent Highlighter, Yellow Ink",7 rows affected
+Customer ID wrong case,262,Dl-13600,DL-13600,Dorris liebe
+Customer ID wrong case,702,Dl-13600,DL-13600,Dorris liebe
+Customer ID wrong case,716,Dl-13600,DL-13600,Dorris liebe
+Customer ID wrong case,1490,Co-12640,CO-12640,Corey-Lock
+Customer ID wrong case,1901,Co-12640,CO-12640,Corey-Lock
+Same Day shipment took >0 days,1474,1 days,0 days,Order US-2016-105676
+Same Day shipment took >0 days,2349,1 days,0 days,Order CA-2018-109701
+Same Day shipment took >0 days,2350,1 days,0 days,Order CA-2018-109701
+Same Day shipment took >0 days,2351,1 days,0 days,Order CA-2018-109701
+Same Day shipment took >0 days,2352,1 days,0 days,Order CA-2018-109701
+City name in multiple states,2928,Apple Valley,"California, Minnesota",2 states
+City name in multiple states,309,Arlington,"Texas, Virginia",2 states
+City name in multiple states,448,Auburn,"Alabama, New York, Washington",3 states
+City name in multiple states,104,Aurora,"Colorado, Illinois",2 states
+City name in multiple states,126,Bloomington,"Illinois, Indiana",2 states
+Double space in product name,81,'Avery Heavy-Duty EZD  Binder With Locking Rings',Avery Heavy-Duty EZD Binder With Locking Rings,OFF-BI-10002309
+Double space in product name,117,"'Tyvek  Top-Opening Peel & Seel Envelopes, Plain White'","Tyvek Top-Opening Peel & Seel Envelopes, Plain White",OFF-EN-10002504
+Double space in product name,204,'Eureka Sanitaire  Commercial Upright',Eureka Sanitaire Commercial Upright,OFF-AP-10003217
+Double space in product name,443,'Eldon Mobile Mega Data Cart  Mega Stackable  Add-On Trays',Eldon Mobile Mega Data Cart Mega Stackable Add-On Trays,OFF-ST-10003058
+Double space in product name,1137,"'Tyvek  Top-Opening Peel & Seel  Envelopes, Gray'","Tyvek Top-Opening Peel & Seel Envelopes, Gray",OFF-EN-10002831
+Missing postal code,2235,null,"Burlington, Vermont — needs ZIP",Order CA-2018-104066
+Missing postal code,5275,null,"Burlington, Vermont — needs ZIP",Order CA-2016-162887
+Missing postal code,8799,null,"Burlington, Vermont — needs ZIP",Order US-2017-150140
+Missing postal code,9147,null,"Burlington, Vermont — needs ZIP",Order US-2017-165505
+Missing postal code,9148,null,"Burlington, Vermont — needs ZIP",Order US-2017-165505
+Suspiciously small sale,2107,$0.88,likely a data entry or discount issue,Acco 3-Hole Punch
+Suspiciously small sale,2762,$0.99,likely a data entry or discount issue,Maxell 4.7GB DVD-R 5/Pack
+Suspiciously small sale,4102,$0.44,likely a data entry or discount issue,Hoover Replacement Belt for Commercial Guardsman Heavy-Duty Upright Vacuum
+Suspiciously small sale,4712,$0.85,likely a data entry or discount issue,Avery Round Ring Poly Binders
+Suspiciously small sale,7549,$0.90,likely a data entry or discount issue,Avery Non-Stick Binders
+Order ID prefix vs Country mismatch,1,CA- prefix on 8161 orders,"Country is always ""United States"" — CA prefix is misleading",8161 of 9800 orders have CA- prefix
