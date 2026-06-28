@@ -1,4 +1,4 @@
-# Intellishift Hackathon — Superstore BI Dashboard
+# Intellishift Hackathon — BI Dashboard
 
 Interactive BI dashboard built with Streamlit + SQLite for the Superstore sales dataset.
 
