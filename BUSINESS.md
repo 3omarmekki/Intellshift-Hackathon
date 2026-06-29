@@ -1,4 +1,4 @@
-# Business Overview: Superstore Enterprise Intelligence
+# O JAMP — Business Overview: Superstore Enterprise Intelligence
 
 ## The Problem
 
@@ -76,7 +76,7 @@ We built realistic mock tables to demonstrate operational visibility:
 
 ## Dashboard Deployed
 
-Live URL: [https://intellshift-hackathon.streamlit.app](https://intellshift-hackathon.streamlit.app)
+Live URL: [https://intellshift-hackathon-cpf4xwbr5jfqjufuhs8gxr.streamlit.app/](https://intellshift-hackathon-cpf4xwbr5jfqjufuhs8gxr.streamlit.app/)
 
 ---
 

@@ -1,8 +1,8 @@
-# Superstore Enterprise Intelligence
+# O JAMP — Superstore Enterprise Intelligence
 
 Interactive BI dashboard with 3 AI models and a Symbolic AI rule engine for the IntelliShift Data Intelligence Hackathon.
 
-**Live dashboard:** https://intellshift-hackathon.streamlit.app
+**Live dashboard:** https://intellshift-hackathon-cpf4xwbr5jfqjufuhs8gxr.streamlit.app/
 
 ## Quick Start
 

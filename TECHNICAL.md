@@ -1,4 +1,4 @@
-# Technical Documentation: Superstore Enterprise Intelligence
+# O JAMP — Technical Documentation: Superstore Enterprise Intelligence
 
 ## Architecture
 
@@ -179,7 +179,7 @@ Rule(
 - **Entry point:** `dashboard.py`
 - **Dependencies:** streamlit, pandas, plotly, scikit-learn, numpy (see `requirements.txt`)
 - **Config:** `.streamlit/config.toml`
-- **Live URL:** [https://intellshift-hackathon.streamlit.app](https://intellshift-hackathon.streamlit.app)
+- **Live URL:** [https://intellshift-hackathon-cpf4xwbr5jfqjufuhs8gxr.streamlit.app/](https://intellshift-hackathon-cpf4xwbr5jfqjufuhs8gxr.streamlit.app/)
 
 ## File Inventory
 
