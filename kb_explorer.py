@@ -3,7 +3,8 @@ import streamlit.components.v1 as components
 import pandas as pd
 from pyvis.network import Network
 from knowledge_base import KnowledgeBase
-from rule_engine import InferenceEngine, build_customer_facts, RULES
+from rules import InferenceEngine, RecommendationEngine, build_customer_facts, RULES, mined_rules_from_baskets
+from mining import generate_association_rules, AssociationRule
 import tempfile
 import os
 
@@ -42,6 +43,7 @@ page = st.sidebar.radio("Navigate", [
     "🗺️ Knowledge Graph",
     "🔍 Entity Browser",
     "⚙️ Rule Engine",
+    "⛏️ Mining",
     "📖 Symbol Dictionary",
 ])
 
@@ -222,14 +224,20 @@ elif "Rule Engine" in page:
     tab1, tab2, tab3 = st.tabs(["📋 All Rules", "🧪 Test on a Customer", "➕ New Rule (Preview)"])
 
     with tab1:
-        for i, rule in enumerate(RULES):
-            with st.expander(f"**{rule.name}** (strength={rule.strength})", expanded=i < 3):
+        # Combine manual + mined rules (mined are computed at test time in tab2)
+        all_rules = list(RULES)
+        st.info(f"{len(RULES)} hand-authored rules. Mined rules are added when you run the Miner on the ⛏️ Mining page.")
+        for i, rule in enumerate(all_rules):
+            src_badge = "🔧 Manual" if rule.source == "manual" else "⛏️ Mined"
+            with st.expander(f"{src_badge} **{rule.name}** (strength={rule.strength})", expanded=i < 3):
                 st.markdown(f"*{rule.description}*")
                 st.markdown("**Conditions:**")
                 for cond in rule.conditions:
                     op_symbol = {"eq": "==", "neq": "!=", "in": "∈", "gt": ">", "lt": "<",
+                                 "gte": "≥", "lte": "≤",
                                  "has_bought": "✓", "not_bought": "✗"}.get(cond.op, cond.op)
-                    st.code(f"  {cond.attribute} {op_symbol} {cond.value}")
+                    extra = f" → sub_attr={cond.sub_attr}" if cond.sub_attr else ""
+                    st.code(f"  {cond.attribute} {op_symbol} {cond.value}{extra}")
                 st.markdown("**Actions:**")
                 for a in rule.actions:
                     params = ", ".join(f"{k}={v}" for k, v in a.params.items())
@@ -237,7 +245,7 @@ elif "Rule Engine" in page:
                 st.markdown(f"**Reason:** _{rule.reason_template}_")
 
     with tab2:
-        st.markdown("Select a customer and see which rules fire.")
+        st.markdown("Select a customer and see scored recommendations (manual + mined rules combined via noisy-OR).")
 
         # Customer selector
         con = kb.con
@@ -255,24 +263,36 @@ elif "Rule Engine" in page:
         selected_cust = st.selectbox("Choose a customer", list(cust_options.keys()), key="test_cust")
         cust_id = cust_options[selected_cust]
 
+        use_mined = st.checkbox("Include mined rules from ⛏️ Mining page", value=False, key="use_mined")
+        mined_rules_active = st.session_state.get("mined_rules", [])
+
         if st.button("▶️ Run Rules", type="primary", key="run_rules"):
             facts = build_customer_facts(kb, cust_id)
             if facts:
                 st.subheader("Customer Facts")
-                st.json({k: v for k, v in facts.items() if not k.startswith("_")})
+                st.json({k: v for k, v in facts.items()
+                         if not isinstance(v, (set, dict)) or k == "bought_subcategories"})
 
-                results = engine.infer(facts)
-                if results:
-                    st.subheader(f"✅ {len(results)} Rules Fired")
-                    for rule, actions, reason in results:
+                all_rules = list(RULES)
+                if use_mined and mined_rules_active:
+                    all_rules.extend(mined_rules_active)
+                    st.caption(f"Using {len(RULES)} manual + {len(mined_rules_active)} mined rules")
+
+                rec_engine = RecommendationEngine(InferenceEngine(all_rules))
+                scored = rec_engine.recommend(facts, top_n=10)
+
+                if scored:
+                    st.subheader(f"🏆 Top {len(scored)} Recommendations")
+                    for rec in scored:
                         with st.container(border=True):
-                            st.markdown(f"**{rule.name}** (confidence: {rule.strength:.0%})")
-                            st.markdown(f"📝 {reason}")
-                            for a in actions:
-                                st.info(f"⮕ **{a.action_type.upper()}**: {a.target}" +
-                                        (f" (discount: {a.params.get('discount', 'N/A')})" if a.params else ""))
+                            score_pct = rec['score'] * 100
+                            st.markdown(f"**{rec['action_type'].upper()}**: {rec['target']}  "
+                                        f"— *score: {score_pct:.0f}%*")
+                            st.markdown(f"📝 {rec['reason']}")
+                            if rec['n_rules'] > 1:
+                                st.caption(f"Combined from {rec['n_rules']} rules: {', '.join(rec['rules'])}")
                 else:
-                    st.info("No rules fired for this customer.")
+                    st.info("No recommendations for this customer.")
             else:
                 st.error("Could not build facts for this customer.")
 
@@ -290,11 +310,85 @@ elif "Rule Engine" in page:
     strength=0.8,
     reason_template="Custom reason for {segment} customers."
 )""", language="python")
-        st.markdown("Edit `rule_engine.py` to add/modify rules, then restart the app.")
+        st.markdown("Edit `rules.py` to add/modify rules, then restart the app.")
 
 
 # ═══════════════════════════════════════════════════════════════════
-# PAGE 4: SYMBOL DICTIONARY
+# PAGE 4: MINING (Apriori Association Rules)
+# ═══════════════════════════════════════════════════════════════════
+elif "Mining" in page:
+    st.title("⛏️ Association Rule Mining (Apriori)")
+    st.markdown("Mine cross-sell patterns from real order baskets using the Apriori algorithm.")
+
+    baskets = kb.get_baskets()
+    st.metric("Total baskets (orders)", len(baskets))
+
+    with st.expander("⚙️ Parameters", expanded=True):
+        c1, c2, c3 = st.columns(3)
+        min_support = c1.slider("Min support", 0.001, 0.2, 0.01, 0.001,
+                                help="Fraction of orders that must contain the itemset")
+        min_confidence = c2.slider("Min confidence", 0.05, 1.0, 0.2, 0.05,
+                                   help="Conditional probability P(B|A) floor")
+        min_lift = c3.slider("Min lift", 1.0, 5.0, 1.1, 0.1,
+                             help="How many × baseline must the association be (1.0 = independent)")
+
+    if st.button("▶️ Run Apriori", type="primary"):
+        with st.spinner("Mining association rules..."):
+            mined = generate_association_rules(
+                baskets, min_support=min_support,
+                min_confidence=min_confidence, min_lift=min_lift, max_k=3,
+            )
+
+        if mined:
+            st.success(f"Found {len(mined)} association rules")
+
+            # Convert to Rule objects for use in the Rule Engine page
+            mined_rules = mined_rules_from_baskets(
+                baskets, min_support=min_support,
+                min_confidence=min_confidence, min_lift=min_lift, max_k=3,
+            )
+            st.session_state["mined_rules"] = mined_rules
+            st.caption(f"Stored {len(mined_rules)} mined rules in session — toggle them on in ⚙️ Rule Engine → Test")
+
+            # Display as table
+            rows = []
+            for r in mined:
+                rows.append({
+                    "Antecedent": ", ".join(sorted(r.antecedent)),
+                    "Consequent": ", ".join(sorted(r.consequent)),
+                    "Support": f"{r.support:.3f}",
+                    "Confidence": f"{r.confidence:.3f}",
+                    "Lift": f"{r.lift:.2f}",
+                    "Conviction": "∞" if r.conviction == float("inf") else f"{r.conviction:.2f}",
+                })
+            df = pd.DataFrame(rows)
+            st.dataframe(df, use_container_width=True, hide_index=True)
+
+            # Visualize top rules
+            st.subheader("Top Rules by Lift")
+            top = df.head(15).copy()
+            top["label"] = top["Antecedent"] + " → " + top["Consequent"]
+            import plotly.express as px
+            fig = px.bar(top, x="Lift", y="label", orientation="h",
+                         color="Confidence", text_auto=".2f",
+                         title="Top 15 Association Rules by Lift",
+                         color_continuous_scale="Viridis", height=500)
+            fig.update_layout(yaxis={"categoryorder": "total ascending"})
+            st.plotly_chart(fig, use_container_width=True)
+        else:
+            st.warning("No rules found with these thresholds. Try lowering min_support or min_confidence.")
+
+    # Quick stats
+    with st.expander("📊 Itemset Statistics"):
+        items = set()
+        for b in baskets:
+            items.update(b)
+        st.markdown(f"**Unique sub-categories:** {len(items)}")
+        st.markdown("**Available items:** " + ", ".join(sorted(items)))
+
+
+# ═══════════════════════════════════════════════════════════════════
+# PAGE 5: SYMBOL DICTIONARY
 # ═══════════════════════════════════════════════════════════════════
 elif "Symbol Dictionary" in page:
     st.title("📖 Symbol Dictionary")
